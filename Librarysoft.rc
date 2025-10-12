@@ -1,0 +1,232 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Polski (Polska) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_PLK)
+LANGUAGE LANG_POLISH, SUBLANG_DEFAULT
+#pragma code_page(1250)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_AddLibraryUser DIALOGEX 0, 0, 259, 69
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "U¿ytkownicy"
+FONT 8, "Microsoft Sans Serif", 400, 0, 0xEE
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,140,48,50,14
+    PUSHBUTTON      "Anuluj",IDCANCEL,202,48,50,14
+    LTEXT           "Dodaj nowego u¿ytkownika biblioteki:",IDC_STATIC,7,5,130,9
+    EDITTEXT        IDC_NAME,93,33,59,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_SURNAME,163,33,79,14,ES_AUTOHSCROLL
+    LTEXT           "Imiê:",IDC_STATIC,93,24,20,8
+    LTEXT           "Nazwisko:",IDC_STATIC,163,24,34,8
+    EDITTEXT        IDC_NUMBER,14,34,71,14,ES_AUTOHSCROLL | ES_READONLY | WS_DISABLED
+    LTEXT           "Karta biblioteczna",IDC_STATIC,14,24,62,8
+END
+
+IDD_AddStoredBook DIALOGEX 0, 0, 359, 69
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Ksia¿ki"
+FONT 8, "Microsoft Sans Serif", 400, 0, 0xEE
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,240,48,50,14
+    PUSHBUTTON      "Anuluj",IDCANCEL,302,48,50,14
+    LTEXT           "Dodaj ksi¹¿kê do zasobów:",IDC_STATIC,7,7,130,9
+    EDITTEXT        IDC_NAME,7,32,59,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_AUTHOR,71,32,59,14,ES_AUTOHSCROLL
+    LTEXT           "Tytu³:",IDC_STATIC,7,22,20,8
+    LTEXT           "Autor:",IDC_STATIC,72,23,22,8
+    LTEXT           "Gatunek:",IDC_STATIC,136,23,30,8
+    EDITTEXT        IDC_COUNT,211,32,27,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Iloœæ:",IDC_STATIC,212,23,18,8
+    EDITTEXT        IDC_PLACE,245,32,90,14,ES_AUTOHSCROLL
+    LTEXT           "Numer rega³u i pó³ka (np. 4H)",IDC_STATIC,247,22,105,8
+    EDITTEXT        IDC_TYPE,134,32,70,14,ES_AUTOHSCROLL
+END
+
+IDD_BorrowBook DIALOGEX 0, 0, 147, 93
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Wybierz"
+FONT 8, "Microsoft Sans Serif", 400, 0, 0xEE
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,23,72,50,14
+    PUSHBUTTON      "Anuluj",IDCANCEL,80,72,50,14
+    LTEXT           "",IDC_TEXT,7,7,130,20
+    COMBOBOX        IDC_CB,10,33,126,197,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_MAINDLG DIALOGEX 0, 0, 609, 267
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "LibrarySoft"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    COMBOBOX        IDC_SourceList,14,25,126,69,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Dostêpne akcje:",IDC_STATIC,11,46,133,214
+    GROUPBOX        "Wybierz Ÿród³o listy:",IDC_STATIC,9,8,137,39
+    LTEXT           "",IDC_LOADEDSOURCE,152,7,450,8
+    PUSHBUTTON      "",IDC_ACTION1,28,60,100,14,NOT WS_VISIBLE
+    PUSHBUTTON      "",IDC_ACTION2,28,76,100,14,NOT WS_VISIBLE
+    PUSHBUTTON      "",IDC_ACTION3,28,92,100,14,NOT WS_VISIBLE
+    PUSHBUTTON      "",IDC_ACTION4,28,108,100,14,NOT WS_VISIBLE
+    PUSHBUTTON      "",IDC_ACTION5,29,124,100,14,NOT WS_VISIBLE
+    PUSHBUTTON      "",IDC_ACTION6,29,140,100,14,NOT WS_VISIBLE
+    PUSHBUTTON      "",IDC_ACTION7,29,156,99,14,NOT WS_VISIBLE
+    LISTBOX         IDC_MainList1,152,18,90,242,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LISTBOX         IDC_MainList2,242,18,90,242,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LISTBOX         IDC_MainList4,422,18,90,242,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LISTBOX         IDC_MainList3,332,18,90,242,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LISTBOX         IDC_MainList5,512,18,90,242,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_ReturnBook DIALOGEX 0, 0, 147, 93
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Wypo¿ycz ksi¹¿kê"
+FONT 8, "Microsoft Sans Serif", 400, 0, 0xEE
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,23,72,50,14
+    PUSHBUTTON      "Anuluj",IDCANCEL,80,72,50,14
+    LTEXT           "Wybierz u¿ytkownika,\nktóremu wypo¿yczona bêdzie ksi¹¿ka:",-1,7,7,130,20
+    COMBOBOX        IDC_COMBO1,10,33,126,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_AddLibraryUser, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 252
+        TOPMARGIN, 5
+        BOTTOMMARGIN, 62
+    END
+
+    IDD_AddStoredBook, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 352
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 62
+    END
+
+    IDD_BorrowBook, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 140
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 86
+    END
+
+    IDD_MAINDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 602
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 260
+    END
+
+    IDD_ReturnBook, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 140
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 86
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_AddLibraryUser AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_AddStoredBook AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_BorrowBook AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_MAINDLG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_ReturnBook AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+#endif    // Polski (Polska) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Angielski (Stany Zjednoczone) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Angielski (Stany Zjednoczone) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
