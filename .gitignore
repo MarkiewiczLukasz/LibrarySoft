@@ -12,6 +12,11 @@
 *.map
 *.exp
 
+# Katalogi buildów CLion
+/cmake-build-*/
+/cmake-build-debug/
+/cmake-build-release/
+
 # Precompiled Headers
 *.gch
 *.pch
