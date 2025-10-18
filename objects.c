@@ -15,12 +15,24 @@ void storedBook_Init(StoredBook *self, int id, char* name, char* author, char* t
 }
 
 char *storedBook_ToString(StoredBook *self){
-	size_t len = 200;
-	sizeof self;
-	snprintf(NULL, len, "%d;%s;%s;%s;%d;%s\n", self->id, self->name, self->author, self->type, self->quantity, self->placeInLibrary);
-	char * stringRep = malloc(len+1);
-	snprintf(stringRep, len+1, "%d;%s;%s;%s;%d;%s\n", self->id, self->name, self->author, self->type, self->quantity, self->placeInLibrary);
-	printf("%s", stringRep);
+	if(!self) return NULL;
+	int len = snprintf(NULL, 0, "%d;%s;%s;%s;%d;%s\n",
+					   self->id,
+					   self->name ? self->name : "",
+					   self->author ? self->author : "",
+					   self->type ? self->type : "",
+					   self->quantity,
+					   self->placeInLibrary ? self->placeInLibrary : "");
+	if(len < 0) return NULL;
+	char *stringRep = (char*)malloc((size_t)len + 1);
+	if(!stringRep) return NULL;
+	snprintf(stringRep, (size_t)len + 1, "%d;%s;%s;%s;%d;%s\n",
+			 self->id,
+			 self->name ? self->name : "",
+			 self->author ? self->author : "",
+			 self->type ? self->type : "",
+			 self->quantity,
+			 self->placeInLibrary ? self->placeInLibrary : "");
 	return stringRep;
 }
 
@@ -35,12 +47,22 @@ void borrowedBook_Init(BorrowedBook *self, int id, char* name, char* author, cha
 	self->initialized = 1;
 }
 char *borrowedBook_ToString(BorrowedBook *self){
-	size_t len = 200;
-	sizeof self;
-	snprintf(NULL, len, "%d;%s;%s;%s;%d\n", self->id, self->name, self->author, self->type, self->user_id);
-	char * stringRep = malloc(len+1);
-	snprintf(stringRep, len+1, "%d;%s;%s;%s;%d\n", self->id, self->name, self->author, self->type, self->user_id);
-	printf("%s", stringRep);
+	if(!self) return NULL;
+	int len = snprintf(NULL, 0, "%d;%s;%s;%s;%d\n",
+					   self->id,
+					   self->name ? self->name : "",
+					   self->author ? self->author : "",
+					   self->type ? self->type : "",
+					   self->user_id);
+	if(len < 0) return NULL;
+	char *stringRep = (char*)malloc((size_t)len + 1);
+	if(!stringRep) return NULL;
+	snprintf(stringRep, (size_t)len + 1, "%d;%s;%s;%s;%d\n",
+			 self->id,
+			 self->name ? self->name : "",
+			 self->author ? self->author : "",
+			 self->type ? self->type : "",
+			 self->user_id);
 	return stringRep;
 }
 
@@ -53,12 +75,20 @@ void libraryUser_Init(LibraryUser *self, int id, int number, char* name, char* s
 	self->surname = surname;
 }
 char *libraryUser_ToString(LibraryUser *self){
-	size_t len = 200;
-	sizeof self;
-	snprintf(NULL, len, "%d;%d;%s;%s\n", self->id, self->number, self->name, self->surname);
-	char * stringRep = malloc(len+1);
-	snprintf(stringRep, len, "%d;%d;%s;%s\n", self->id, self->number, self->name, self->surname);
-	printf("%s", stringRep);
+	if(!self) return NULL;
+	int len = snprintf(NULL, 0, "%d;%d;%s;%s\n",
+					   self->id,
+					   self->number,
+					   self->name ? self->name : "",
+					   self->surname ? self->surname : "");
+	if(len < 0) return NULL;
+	char *stringRep = (char*)malloc((size_t)len + 1);
+	if(!stringRep) return NULL;
+	snprintf(stringRep, (size_t)len + 1, "%d;%d;%s;%s\n",
+			 self->id,
+			 self->number,
+			 self->name ? self->name : "",
+			 self->surname ? self->surname : "");
 	return stringRep;
 }
 
