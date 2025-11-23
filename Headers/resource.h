@@ -30,12 +30,11 @@
 #define IDC_MainList5                   1031
 #define IDC_CB                          1031
 #define IDC_TYPE                        1032
-#define IDC_ACTION1                     5000
-#define IDC_ACTION2                     5001
-#define IDC_ACTION3                     5002
-#define IDC_ACTION4                     5003
-#define IDC_ACTION5                     5004
-#define IDC_ACTION6                     5005
+#define IDC_ACTION_ADD                  5000
+#define IDC_ACTION_EDIT                 5001
+#define IDC_ACTION_RETURN               5002
+#define IDC_ACTION_BORROW               5003
+#define IDC_ACTION_DELETE               5005
 #define IDC_ACTION7                     5006
 #define IDC_STATIC                      -1
 #define IDC_TEXT                        65535

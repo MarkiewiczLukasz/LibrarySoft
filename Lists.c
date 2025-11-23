@@ -26,10 +26,9 @@ static void get_exe_dir(char *out, size_t out_sz) {
     char buf[MAX_PATH];
     DWORD n = GetModuleFileNameA(NULL, buf, (DWORD)sizeof(buf));
     if (n == 0 || n >= sizeof(buf)) { out[0] = '\0'; return; }
-    // znajdź ostatni separator katalogów
     char *last = strrchr(buf, '\\');
     if (!last) { out[0] = '\0'; return; }
-    size_t len = (size_t)(last - buf + 1); // z końcowym '\\'
+    size_t len = (size_t)(last - buf + 1);
     if (len >= out_sz) len = out_sz - 1;
     memcpy(out, buf, len);
     out[len] = '\0';
@@ -39,21 +38,9 @@ static void get_exe_dir(char *out, size_t out_sz) {
 static void Lists_InitPaths(void) {
     char exe_dir[MAX_PATH];
     get_exe_dir(exe_dir, sizeof(exe_dir));
-
-    // Zbuduj ścieżki Data\\*.DAT
     snprintf(ListStoredBooksFilePath, sizeof(ListStoredBooksFilePath), "%sData\\ListStoredBooks.DAT", exe_dir);
     snprintf(ListBorrowedBooksFilePath, sizeof(ListBorrowedBooksFilePath), "%sData\\ListBorrowedBooks.DAT", exe_dir);
     snprintf(ListLibraryUsersFilePath, sizeof(ListLibraryUsersFilePath), "%sData\\ListLibraryUsers.DAT", exe_dir);
-}
-
-// bezpieczne duplikowanie łańcucha (zabezpieczenie przed NULL)
-static char *dup_str(const char *s) {
-    if (!s) return NULL;
-    size_t len = strlen(s);
-    char *p = (char*)malloc(len + 1);
-    if (!p) return NULL;
-    memcpy(p, s, len + 1);
-    return p;
 }
 
 // === INIT ===
@@ -62,38 +49,19 @@ int ListStoredBooks_Init() {
     ListStoredBooksLastIndex = -1;
 
     FILE *fptr = fopen(ListStoredBooksFilePath, "r");
-    if (!fptr) return 0; // brak pliku = brak danych
+    if (!fptr) return 0;
 
     char line[MAX_LINE_LENGTH + 1];
-    const char *delim = ";";
-
     while (fgets(line, sizeof(line), fptr)) {
-        // pomiń puste linie
-        if (line[0] == '\n' || line[0] == '\r' || line[0] == '\0') continue;
-
-        StoredBook storedBook; memset(&storedBook, 0, sizeof(storedBook));
-
-        char *ctx = NULL;
-        char *item = strtok_s(line, delim, &ctx);
-        if (!item) continue; storedBook.id = atoi(item);
-
-        item = strtok_s(NULL, delim, &ctx);
-        storedBook.name = dup_str(item);
-
-        item = strtok_s(NULL, delim, &ctx);
-        storedBook.author = dup_str(item);
-
-        item = strtok_s(NULL, delim, &ctx);
-        storedBook.type = dup_str(item);
-
-        item = strtok_s(NULL, delim, &ctx);
-        storedBook.quantity = item ? atoi(item) : 0;
-
-        item = strtok_s(NULL, "\n", &ctx);
-        storedBook.placeInLibrary = dup_str(item ? item : "");
-
-        storedBook.initialized = 1;
-        ListStoredBooks_Add(&storedBook);
+        StoredBook book;
+        memset(&book, 0, sizeof(book));
+        
+        if (sscanf(line, "%d;%99[^;];%99[^;];%49[^;];%d;%49[^\n]",
+                   &book.id, book.name, book.author, book.type,
+                   &book.quantity, book.placeInLibrary) >= 5) {
+            book.initialized = 1;
+            ListStoredBooks_Add(&book);
+        }
     }
     fclose(fptr);
     return 1;
@@ -107,31 +75,16 @@ int ListBorrowedBooks_Init() {
     if (!fptr) return 0;
 
     char line[MAX_LINE_LENGTH + 1];
-    const char *delim = ";";
-
     while (fgets(line, sizeof(line), fptr)) {
-        if (line[0] == '\n' || line[0] == '\r' || line[0] == '\0') continue;
-
-        BorrowedBook borrowedBook; memset(&borrowedBook, 0, sizeof(borrowedBook));
-
-        char *ctx = NULL;
-        char *item = strtok_s(line, delim, &ctx);
-        if (!item) continue; borrowedBook.id = atoi(item);
-
-        item = strtok_s(NULL, delim, &ctx);
-        borrowedBook.name = dup_str(item);
-
-        item = strtok_s(NULL, delim, &ctx);
-        borrowedBook.author = dup_str(item);
-
-        item = strtok_s(NULL, delim, &ctx);
-        borrowedBook.type = dup_str(item);
-
-        item = strtok_s(NULL, "\n", &ctx);
-        borrowedBook.user_id = item ? atoi(item) : 0;
-
-        borrowedBook.initialized = 1;
-        ListBorrowedBooks_Add(&borrowedBook);
+        BorrowedBook book;
+        memset(&book, 0, sizeof(book));
+        
+        if (sscanf(line, "%d;%99[^;];%99[^;];%49[^;];%d",
+                   &book.id, book.name, book.author, book.type,
+                   &book.user_id) == 5) {
+            book.initialized = 1;
+            ListBorrowedBooks_Add(&book);
+        }
     }
     fclose(fptr);
     return 1;
@@ -145,27 +98,14 @@ int ListLibraryUsers_Init() {
     if (!fptr) return 0;
 
     char line[MAX_LINE_LENGTH + 1];
-    const char *delim = ";";
-
     while (fgets(line, sizeof(line), fptr)) {
-        if (line[0] == '\n' || line[0] == '\r' || line[0] == '\0') continue;
-
-        LibraryUser libraryUser; memset(&libraryUser, 0, sizeof(libraryUser));
-
-        char *ctx = NULL;
-        char *item = strtok_s(line, delim, &ctx);
-        if (!item) continue; libraryUser.id = atoi(item);
-
-        item = strtok_s(NULL, delim, &ctx);
-        libraryUser.number = item ? atoi(item) : 0;
-
-        item = strtok_s(NULL, delim, &ctx);
-        libraryUser.name = dup_str(item);
-
-        item = strtok_s(NULL, "\n", &ctx);
-        libraryUser.surname = dup_str(item ? item : "");
-
-        ListLibraryUsers_Add(&libraryUser);
+        LibraryUser user;
+        memset(&user, 0, sizeof(user));
+        
+        if (sscanf(line, "%d;%d;%99[^;];%99[^\n]",
+                   &user.id, &user.number, user.name, user.surname) >= 3) {
+            ListLibraryUsers_Add(&user);
+        }
     }
     fclose(fptr);
     return 1;
@@ -218,7 +158,7 @@ int ListLibraryUsers_Delete(int index) {
     // Usuń wypożyczenia tego użytkownika
     for (int y = 0; y <= ListBorrowedBooksLastIndex; ) {
         if (ListBorrowedBooks[y].user_id == ListLibraryUsers[index].id) {
-            ListBorrowedBooks_Delete(y); // nie inkrementujemy y — elementy się przesuwają
+            ListBorrowedBooks_Delete(y);
         } else {
             y++;
         }
@@ -251,73 +191,59 @@ int ListStoredBooks_FindName(char *name) {
 }
 
 // === SAVE ===
-static int replace_file_atomic(const char *final_path, const char *tmp_path) {
-    char bak_path[MAX_PATH];
-    snprintf(bak_path, sizeof(bak_path), "%s.bak", final_path);
-    remove(bak_path);
-    rename(final_path, bak_path);
-    remove(final_path);
-    if (rename(tmp_path, final_path) != 0) {
-        rename(bak_path, final_path);
-        remove(tmp_path);
-        return 0;
-    }
-    return 1;
-}
-
 int ListStoredBooks_Save(void) {
     Lists_InitPaths();
-    char tmp[MAX_PATH];
-    snprintf(tmp, sizeof(tmp), "%s.tmp", ListStoredBooksFilePath);
-    FILE *f = fopen(tmp, "w"); if (!f) return 0;
+    FILE *f = fopen(ListStoredBooksFilePath, "w");
+    if (!f) return 0;
+    
     for (int i = 0; i <= ListStoredBooksLastIndex; i++) {
-        char *line = storedBook_ToString(&ListStoredBooks[i]);
-        if (!line) { fclose(f); remove(tmp); return 0; }
-        fwrite(line, strlen(line), 1, f); free(line);
+        fprintf(f, "%d;%s;%s;%s;%d;%s\n",
+                ListStoredBooks[i].id,
+                ListStoredBooks[i].name,
+                ListStoredBooks[i].author,
+                ListStoredBooks[i].type,
+                ListStoredBooks[i].quantity,
+                ListStoredBooks[i].placeInLibrary);
     }
     fclose(f);
-    return replace_file_atomic(ListStoredBooksFilePath, tmp);
+    return 1;
 }
 
 int ListBorrowedBooks_Save(void) {
     Lists_InitPaths();
-    char tmp[MAX_PATH];
-    snprintf(tmp, sizeof(tmp), "%s.tmp", ListBorrowedBooksFilePath);
-    FILE *f = fopen(tmp, "w"); if (!f) return 0;
+    FILE *f = fopen(ListBorrowedBooksFilePath, "w");
+    if (!f) return 0;
+    
     for (int i = 0; i <= ListBorrowedBooksLastIndex; i++) {
-        char *line = borrowedBook_ToString(&ListBorrowedBooks[i]);
-        if (!line) { fclose(f); remove(tmp); return 0; }
-        fwrite(line, strlen(line), 1, f); free(line);
+        fprintf(f, "%d;%s;%s;%s;%d\n",
+                ListBorrowedBooks[i].id,
+                ListBorrowedBooks[i].name,
+                ListBorrowedBooks[i].author,
+                ListBorrowedBooks[i].type,
+                ListBorrowedBooks[i].user_id);
     }
     fclose(f);
-    return replace_file_atomic(ListBorrowedBooksFilePath, tmp);
+    return 1;
 }
 
 int ListLibraryUsers_Save(void) {
     Lists_InitPaths();
-    char tmp[MAX_PATH];
-    snprintf(tmp, sizeof(tmp), "%s.tmp", ListLibraryUsersFilePath);
-    FILE *f = fopen(tmp, "w"); if (!f) return 0;
+    FILE *f = fopen(ListLibraryUsersFilePath, "w");
+    if (!f) return 0;
+    
     for (int i = 0; i <= ListLibraryUsersLastIndex; i++) {
-        char *line = libraryUser_ToString(&ListLibraryUsers[i]);
-        if (!line) { fclose(f); remove(tmp); return 0; }
-        fwrite(line, strlen(line), 1, f); free(line);
+        fprintf(f, "%d;%d;%s;%s\n",
+                ListLibraryUsers[i].id,
+                ListLibraryUsers[i].number,
+                ListLibraryUsers[i].name,
+                ListLibraryUsers[i].surname);
     }
     fclose(f);
-    return replace_file_atomic(ListLibraryUsersFilePath, tmp);
+    return 1;
 }
 
 // === FREE ===
 int ListStoredBooks_Free() {
-    for (int i = 0; i <= ListStoredBooksLastIndex; i++) {
-        StoredBook *s = &ListStoredBooks[i];
-        s->id = 0;
-        free(s->name); s->name = NULL;
-        free(s->author); s->author = NULL;
-        free(s->type); s->type = NULL;
-        s->quantity = 0;
-        free(s->placeInLibrary); s->placeInLibrary = NULL;
-    }
     ListStoredBooksLastIndex = -1;
     return 1;
 }

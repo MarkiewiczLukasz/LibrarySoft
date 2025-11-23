@@ -129,11 +129,11 @@ BOOL CALLBACK addStoredBookWindow(HWND hwnd, UINT Message, WPARAM wParam, LPARAM
             {
                 // Tryb edycji istniejącego rekordu
                 int id = editedStoredBookId;
-                ListStoredBooks[id].name = name;
-                ListStoredBooks[id].author = author;
-                ListStoredBooks[id].type = type;
+                strncpy(ListStoredBooks[id].name, name, sizeof(ListStoredBooks[id].name) - 1);
+                strncpy(ListStoredBooks[id].author, author, sizeof(ListStoredBooks[id].author) - 1);
+                strncpy(ListStoredBooks[id].type, type, sizeof(ListStoredBooks[id].type) - 1);
                 ListStoredBooks[id].quantity = quantityINT;
-                ListStoredBooks[id].placeInLibrary = place;
+                strncpy(ListStoredBooks[id].placeInLibrary, place, sizeof(ListStoredBooks[id].placeInLibrary) - 1);
             }
             else
             {
@@ -200,8 +200,8 @@ BOOL CALLBACK addLibraryUserWindow(HWND hwnd, UINT Message, WPARAM wParam, LPARA
             {
                 // Tryb edycji użytkownika
                 int id = editedUserId;
-                ListLibraryUsers[id].name = name;
-                ListLibraryUsers[id].surname = surname;
+                strncpy(ListLibraryUsers[id].name, name, sizeof(ListLibraryUsers[id].name) - 1);
+                strncpy(ListLibraryUsers[id].surname, surname, sizeof(ListLibraryUsers[id].surname) - 1);
             }
             else
             {
@@ -296,284 +296,35 @@ BOOL CALLBACK mainWindow(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
             // brak "break" – dalej obsługa przycisków akcji (fallthrough kontrolowany)
         }
         // === Akcja 1 ===
-        case IDC_ACTION1:
-        {
-            // Dodanie nowego rekordu zależnie od aktywnego źródła
-            switch (sourceSelected)
-            {
-            case 0: // Zasoby: dodaj książkę magazynową
-                if (HIWORD(wParam) == BN_CLICKED && hwndNewBook == NULL)
-                {
-                    editedStoredBookId = -1;
-                    HINSTANCE instance = GetModuleHandle(NULL);
-                    hwndNewBook = CreateDialog(instance,
-                                               MAKEINTRESOURCE(IDD_AddStoredBook),
-                                               hwnd,
-                                               (DLGPROC)addStoredBookWindow);
-                    ShowWindow(hwndNewBook, SW_SHOW);
-                }
-                break;
-
-            case 2: // Użytkownicy: dodaj użytkownika
-                if (HIWORD(wParam) == BN_CLICKED && hwndNewUser == NULL)
-                {
-                    editedUserId = -1;
-                    HINSTANCE instance = GetModuleHandle(NULL);
-                    hwndNewUser = CreateDialog(instance,
-                                               MAKEINTRESOURCE(IDD_AddLibraryUser),
-                                               hwnd,
-                                               (DLGPROC)addLibraryUserWindow);
-                    ShowWindow(hwndNewUser, SW_SHOW);
-
-                    // Wypełnij pole numeru losową wartością
-                    HWND numberBox = GetDlgItem(hwndNewUser, IDC_NUMBER);
-                    int randNumber = rand() % 5000;
-                    char buff[32];
-                    snprintf(buff, sizeof(buff), "%i", randNumber);
-                    SetWindowTextA(numberBox, buff);
-                }
-                break;
-            }
-        }
-        break;
-
-        // === Akcja 2 ===
-        case IDC_ACTION2:
-        {
-            // Edycja istniejącego rekordu zależnie od źródła
-            switch (sourceSelected)
-            {
-            case 0: // Zasoby: edytuj książkę magazynową
-                if (HIWORD(wParam) == BN_CLICKED && hwndNewBook == NULL)
-                {
-                    HWND list = GetDlgItem(hwnd, IDC_MainList1);
-                    int indexSelected = (int)SendMessage(list, LB_GETCURSEL, 0, 0);
-                    if (indexSelected == LB_ERR)
-                    {
-                        return MessageBox(hwnd, "Wybierz książkę", "Błąd", MB_OK);
-                    }
-
-                    HINSTANCE instance = GetModuleHandle(NULL);
-                    hwndNewBook = CreateDialog(instance,
-                                               MAKEINTRESOURCE(IDD_AddStoredBook),
-                                               hwnd,
-                                               (DLGPROC)addStoredBookWindow);
-                    ShowWindow(hwndNewBook, SW_SHOW);
-
-                    int idOfBook = (int)SendMessage(list, LB_GETITEMDATA, indexSelected, 0);
-                    StoredBook s = ListStoredBooks[idOfBook];
-
-                    HWND description = GetDlgItem(hwndNewBook, IDC_STATIC);
-                    HWND nameBox = GetDlgItem(hwndNewBook, IDC_NAME);
-                    HWND authorBox = GetDlgItem(hwndNewBook, IDC_AUTHOR);
-                    HWND typeBox = GetDlgItem(hwndNewBook, IDC_TYPE);
-                    HWND countBox = GetDlgItem(hwndNewBook, IDC_COUNT);
-                    HWND placeBox = GetDlgItem(hwndNewBook, IDC_PLACE);
-
-                    SetWindowTextA(description, "Edytuj wybraną książkę");
-                    SetWindowTextA(nameBox, s.name);
-                    SetWindowTextA(authorBox, s.author);
-                    SetWindowTextA(typeBox, s.type);
-
-                    char intAsStr[32];
-                    snprintf(intAsStr, sizeof(intAsStr), "%i", s.quantity);
-                    SetWindowTextA(countBox, intAsStr);
-                    SetWindowTextA(placeBox, s.placeInLibrary);
-                    editedStoredBookId = idOfBook;
-                }
-                break;
-
-            case 2: // Użytkownicy: edytuj użytkownika
-                if (HIWORD(wParam) == BN_CLICKED && hwndNewUser == NULL)
-                {
-                    HWND list = GetDlgItem(hwnd, IDC_MainList1);
-                    int indexSelected = (int)SendMessage(list, LB_GETCURSEL, 0, 0);
-                    if (indexSelected == LB_ERR)
-                    {
-                        return MessageBox(hwnd, "Wybierz czytelnika", "Błąd", MB_OK);
-                    }
-
-                    HINSTANCE instance = GetModuleHandle(NULL);
-                    hwndNewUser = CreateDialog(instance,
-                                               MAKEINTRESOURCE(IDD_AddLibraryUser),
-                                               hwnd,
-                                               (DLGPROC)addLibraryUserWindow);
-                    ShowWindow(hwndNewUser, SW_SHOW);
-
-                    int idOfUser = (int)SendMessage(list, LB_GETITEMDATA, indexSelected, 0);
-                    LibraryUser s = ListLibraryUsers[idOfUser];
-
-                    HWND description = GetDlgItem(hwndNewUser, IDC_STATIC);
-                    HWND nameBox = GetDlgItem(hwndNewUser, IDC_NAME);
-                    HWND surnameBox = GetDlgItem(hwndNewUser, IDC_SURNAME);
-                    HWND numberBox = GetDlgItem(hwndNewUser, IDC_NUMBER);
-
-                    SetWindowTextA(description, "Edytuj wybranego czytelnika");
-                    SetWindowTextA(nameBox, s.name);
-                    SetWindowTextA(surnameBox, s.surname);
-
-                    char intAsStr[32];
-                    snprintf(intAsStr, sizeof(intAsStr), "%i", s.number);
-                    SetWindowTextA(numberBox, intAsStr);
-
-                    editedUserId = idOfUser;
-                }
-                break;
-            }
-        }
-        break;
-
-        // === Akcja 3 ===
-        case IDC_ACTION3:
-        {
-            // Operacje na wypożyczonych książkach (zwrot)
-            switch (sourceSelected)
-            {
-            case 1: // Wypożyczone: zwróć książkę do zasobów
-                if (HIWORD(wParam) == BN_CLICKED)
-                {
-                    HWND list = GetDlgItem(hwnd, IDC_MainList1);
-                    int indexSelected = (int)SendMessage(list, LB_GETCURSEL, 0, 0);
-                    int idOfBook = (int)SendMessage(list, LB_GETITEMDATA, indexSelected, 0);
-                    if (idOfBook == -1)
-                    {
-                        return MessageBox(hwnd, "Wybierz książkę", "Błąd", MB_OK);
-                    }
-
-                    int msgResult = MessageBox(hwnd,
-                                               "Czy jesteś pewny, że chcesz zwrócić wybraną książkę?",
-                                               "Zwróć książkę",
-                                               MB_ICONWARNING | MB_YESNO);
-                    if (msgResult == IDYES)
-                    {
-                        StoredBook s;
-                        storedBook_Init(&s,
-                                        ListStoredBooks[ListBorrowedBooksLastIndex].id + 1,
-                                        ListBorrowedBooks[idOfBook].name,
-                                        ListBorrowedBooks[idOfBook].author,
-                                        ListBorrowedBooks[idOfBook].type,
-                                        1,
-                                        "ZWROTY");
-                        ListStoredBooks_Add(&s);
-                        ListStoredBooks_Save();
-                        ListBorrowedBooks_Delete(idOfBook);
-                        ListBorrowedBooks_Save();
-                        FillList(mainHWND, sourceSelected);
-                    }
-                }
-                break;
-            }
-        }
-        break;
-
-        // === Akcja 4 ===
-        case IDC_ACTION4:
-        {
-            // Wypożycz książkę wybranemu użytkownikowi
-            switch (sourceSelected)
-            {
-            case 0: // Zasoby: otwórz dialog wypożyczenia
-                if (HIWORD(wParam) == BN_CLICKED)
-                {
-                    if (HIWORD(wParam) == BN_CLICKED && hwndBorrowBook == NULL)
-                    {
-                        HWND list = GetDlgItem(hwnd, IDC_MainList1);
-                        int indexSelected = (int)SendMessage(list, LB_GETCURSEL, 0, 0);
-                        int idOfBook = (int)SendMessage(list, LB_GETITEMDATA, indexSelected, 0);
-                        if (idOfBook == -1)
-                        {
-                            return MessageBox(hwnd, "Wybierz książkę", "Błąd", MB_OK);
-                        }
-
-                        HINSTANCE instance = GetModuleHandle(NULL);
-                        hwndBorrowBook = CreateDialog(instance,
-                                                      MAKEINTRESOURCE(IDD_BorrowBook),
-                                                      hwnd,
-                                                      (DLGPROC)BorrowBookWindow);
-                        ShowWindow(hwndBorrowBook, SW_SHOW);
-                        borrowingBookId = idOfBook;
-
-                        HWND description = GetDlgItem(hwndBorrowBook, IDC_TEXT);
-                        HWND comboBox = GetDlgItem(hwndBorrowBook, IDC_CB);
-                        SetWindowTextA(description, "Wybierz czytelnika,\nktóremu wypożyczana jest książka.");
-
-                        for (int x = 0; x <= ListLibraryUsersLastIndex; x++)
-                        {
-                            char tempStr[128];
-                            snprintf(tempStr, sizeof(tempStr), "(%d)%s %s", ListLibraryUsers[x].number, ListLibraryUsers[x].name, ListLibraryUsers[x].surname);
-                            int pos = (int)SendMessage(comboBox, CB_ADDSTRING, 0, (LPARAM)tempStr);
-                            SendMessage(comboBox, CB_SETITEMDATA, pos, (LPARAM)x); // zapisz indeks jako item data
-                        }
-                        SendMessage(comboBox, CB_SETCURSEL, (WPARAM)2, (LPARAM)0);
-                    }
-                }
-                break;
-            }
-        }
-        break;
-
-        // === Akcja 5 ===
-        case IDC_ACTION5:
-            // Aktualnie puste miejsce na przyszłą funkcję (np. eksport, druk, itp.)
+        case IDC_ACTION_ADD:
+            if (HIWORD(wParam) == BN_CLICKED)
+                HandleAction1(hwnd, sourceSelected);
             break;
 
+        // === Akcja 2 ===
+        case IDC_ACTION_EDIT:
+            if (HIWORD(wParam) == BN_CLICKED)
+                HandleAction2(hwnd, sourceSelected);
+            break;
+
+        // === Akcja 3 ===
+        case IDC_ACTION_RETURN:
+            if (HIWORD(wParam) == BN_CLICKED)
+                HandleAction3(hwnd, sourceSelected);
+            break;
+
+        // === Akcja 4 ===
+        case IDC_ACTION_BORROW:
+            if (HIWORD(wParam) == BN_CLICKED)
+                HandleAction4(hwnd, sourceSelected);
+            break;
+
+
         // === Akcja 6 ===
-        case IDC_ACTION6:
-        {
-            // Usuwanie rekordów (zasoby / użytkownicy)
-            switch (sourceSelected)
-            {
-            case 0: // Zasoby: usuń książkę
-                if (HIWORD(wParam) == BN_CLICKED)
-                {
-                    HWND list = GetDlgItem(hwnd, IDC_MainList1);
-                    int indexSelected = (int)SendMessage(list, LB_GETCURSEL, 0, 0);
-                    int idOfBook = (int)SendMessage(list, LB_GETITEMDATA, indexSelected, 0);
-                    if (idOfBook == -1)
-                    {
-                        return MessageBox(hwnd, "Wybierz książkę", "Błąd", MB_OK);
-                    }
-
-                    int msgResult = MessageBox(hwnd,
-                                               "Czy jesteś pewny, że chcesz usunąć wybraną książkę?",
-                                               "Usuń książkę",
-                                               MB_ICONWARNING | MB_YESNO);
-                    if (msgResult == IDYES)
-                    {
-                        ListStoredBooks_Delete(idOfBook);
-                        ListStoredBooks_Save();
-                        FillList(mainHWND, sourceSelected);
-                    }
-                }
-                break;
-
-            case 2: // Użytkownicy: usuń użytkownika (z ostrzeżeniem)
-                if (HIWORD(wParam) == BN_CLICKED)
-                {
-                    HWND list = GetDlgItem(hwnd, IDC_MainList1);
-                    int indexSelected = (int)SendMessage(list, LB_GETCURSEL, 0, 0);
-                    int idOfuser = (int)SendMessage(list, LB_GETITEMDATA, indexSelected, 0);
-                    if (idOfuser == -1)
-                    {
-                        return MessageBox(hwnd, "Wybierz czytelnika", "Błąd", MB_OK);
-                    }
-
-                    int msgResult = MessageBox(hwnd,
-                                               "Czy jesteś pewny, że chcesz usunąć wybranego czytelnika?\nWszystkie wypożyczone przez niego książki przepadną!",
-                                               "Usuń czytelnika",
-                                               MB_ICONWARNING | MB_YESNO);
-                    if (msgResult == IDYES)
-                    {
-                        ListLibraryUsers_Delete(idOfuser);
-                        // TODO: usuwanie wypożyczonych książek powiązanych z użytkownikiem
-                        ListLibraryUsers_Save();
-                        FillList(mainHWND, sourceSelected);
-                    }
-                }
-                break;
-            }
-        }
-        break;
+        case IDC_ACTION_DELETE:
+            if (HIWORD(wParam) == BN_CLICKED)
+                HandleAction6(hwnd, sourceSelected);
+            break;
         }
         break; // WM_COMMAND
 

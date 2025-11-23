@@ -4,9 +4,7 @@ project(LibrarySoft C)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-# Dodaj flagę do wszystkich kompilacji C
 add_compile_options(-fms-extensions)
-
 add_executable(LibrarySoft WIN32
         main.c
         lists.c
