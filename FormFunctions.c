@@ -251,9 +251,20 @@ void HandleActionAdd(HWND hwnd, int sourceSelected) {
                                        (DLGPROC)addLibraryUserWindow);
             ShowWindow(hwndNewUser, SW_SHOW);
 
-            // Wypełnij pole numeru losową wartością
+            // Wygeneruj unikalny numer karty bibliotecznej
             HWND numberBox = GetDlgItem(hwndNewUser, IDC_NUMBER);
-            int randNumber = rand() % 5000;
+            int randNumber;
+            int isUnique;
+            do {
+                randNumber = rand() % 5000;
+                isUnique = 1;
+                for (int i = 0; i <= ListLibraryUsersLastIndex; i++) {
+                    if (ListLibraryUsers[i].number == randNumber) {
+                        isUnique = 0;
+                        break;
+                    }
+                }
+            } while (!isUnique);
             char buff[32];
             snprintf(buff, sizeof(buff), "%i", randNumber);
             SetWindowTextA(numberBox, buff);
