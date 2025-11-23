@@ -15,6 +15,18 @@ czytelników w przejrzystym interfejsie opartym o klasyczne okna dialogowe Win32
 - **Zapisywanie danych na dysku** – wszystkie listy zapisywane są w plikach tekstowych w
   katalogu `Data`, dzięki czemu aplikacja uruchomiona ponownie odtworzy wcześniejszy stan.
 
+## Urochomienie z CMAKE, bez CLion
+Będąc w katalogu źródłowym
+
+- Konfiguracja
+`cmake -S . -B build`
+
+- Budowanie
+`cmake --build build`
+
+- Uruchomienie
+`.\build\Debug\LibrarySoft.exe`
+
 ## Struktura projektu
 
 - `main.c` – logika głównego okna dialogowego, obsługa przycisków i formularzy.

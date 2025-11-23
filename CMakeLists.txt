@@ -6,12 +6,17 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 
 # Dodaj flagę do wszystkich kompilacji C
 add_compile_options(-fms-extensions)
-add_executable(LibrarySoft
+
+add_executable(LibrarySoft WIN32
         main.c
         lists.c
         objects.c
         formFunctions.c
         res/Librarysoft.rc)
+
+if(MSVC)
+    target_link_options(LibrarySoft PRIVATE /MANIFEST:NO)
+endif()
 
 add_custom_command(TARGET LibrarySoft POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:LibrarySoft>/Data"

@@ -17,6 +17,9 @@
 /cmake-build-debug/
 /cmake-build-release/
 
+#Cmake proponowana nazwa builda
+/build/
+
 # Precompiled Headers
 *.gch
 *.pch
