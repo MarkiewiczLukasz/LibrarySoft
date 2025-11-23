@@ -433,8 +433,8 @@ void HandleActionDelete(HWND hwnd, int sourceSelected) {
         }
 
         int msgResult = MessageBox(hwnd,
-                                   "Czy jesteś pewny, że chcesz usunąć wybraną książkę?",
-                                   "Usuń książkę",
+                                   "Czy jesteś pewny, że chcesz usunąć wybraną pozycję i jej wszystkie sztuki?",
+                                   "Usuń pozycję",
                                    MB_ICONWARNING | MB_YESNO);
         if (msgResult == IDYES) {
             ListStoredBooks_Delete(idOfBook);

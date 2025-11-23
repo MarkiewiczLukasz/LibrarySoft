@@ -125,6 +125,18 @@ BOOL CALLBACK addStoredBookWindow(HWND hwnd, UINT Message, WPARAM wParam, LPARAM
             char quantity[100] = "";GetWindowTextA(countBox, quantity, 100);
             int quantityINT = atoi(quantity);
 
+            // Walidacja: sprawdź czy wymagane pola nie są puste
+            if (strlen(name) == 0 || strlen(author) == 0) {
+                MessageBox(hwndNewBook, "Tytuł i autor nie mogą być puste", "Błąd", MB_OK | MB_ICONERROR);
+                break;
+            }
+
+            // Walidacja: sprawdź ilość
+            if (quantityINT <= 0) {
+                MessageBox(hwndNewBook, "Ilość musi być większa od zera", "Błąd", MB_OK | MB_ICONERROR);
+                break;
+            }
+
             if (editedStoredBookId != -1)
             {
                 // Tryb edycji istniejącego rekordu
@@ -138,10 +150,10 @@ BOOL CALLBACK addStoredBookWindow(HWND hwnd, UINT Message, WPARAM wParam, LPARAM
             else
             {
                 // Tryb dodawania nowego rekordu
+                int newId = (ListStoredBooksLastIndex >= 0) ?
+                           ListStoredBooks[ListStoredBooksLastIndex].id + 1 : 1;
                 StoredBook newBook;
-                storedBook_Init(&newBook,
-                                ListStoredBooks[ListStoredBooksLastIndex].id + 1,
-                                name, author, type, quantityINT, place);
+                storedBook_Init(&newBook, newId, name, author, type, quantityINT, place);
                 ListStoredBooks_Add(&newBook);
             }
 
@@ -196,6 +208,12 @@ BOOL CALLBACK addLibraryUserWindow(HWND hwnd, UINT Message, WPARAM wParam, LPARA
             char surname[100] = "";  GetWindowTextA(surnameBox, surname, 100);
             char number[100] = "";   GetWindowTextA(numberBox, number, 100);
 
+            // Walidacja: sprawdź czy pola nie są puste
+            if (strlen(name) == 0 || strlen(surname) == 0) {
+                MessageBox(hwndNewUser, "Imię i nazwisko nie mogą być puste", "Błąd", MB_OK | MB_ICONERROR);
+                break;
+            }
+
             if (editedUserId != -1)
             {
                 // Tryb edycji użytkownika
@@ -206,10 +224,10 @@ BOOL CALLBACK addLibraryUserWindow(HWND hwnd, UINT Message, WPARAM wParam, LPARA
             else
             {
                 // Dodawanie nowego użytkownika
+                int newId = (ListLibraryUsersLastIndex >= 0) ? 
+                           ListLibraryUsers[ListLibraryUsersLastIndex].id + 1 : 1;
                 LibraryUser newUser;
-                libraryUser_Init(&newUser,
-                                  ListLibraryUsers[ListLibraryUsersLastIndex].id + 1,
-                                  atoi(number), name, surname);
+                libraryUser_Init(&newUser, newId, atoi(number), name, surname);
                 ListLibraryUsers_Add(&newUser);
             }
 
