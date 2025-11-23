@@ -139,13 +139,17 @@ int ListBorrowedBooks_Add(BorrowedBook *borrowedBook) {
 }
 
 // === DELETE ===
-int ListStoredBooks_Delete(int index) {
+int ListStoredBooks_Delete(int index, bool deleteAll) {
     if (index < 0 || index > ListStoredBooksLastIndex) return 0;
 
-    for (int x = index; x < ListStoredBooksLastIndex; x++) {
-        ListStoredBooks[x] = ListStoredBooks[x + 1];
+    if (ListStoredBooks[index].quantity > 1 && !deleteAll) {
+        ListStoredBooks[index].quantity--;
+    } else {
+        for (int x = index; x < ListStoredBooksLastIndex; x++) {
+            ListStoredBooks[x] = ListStoredBooks[x + 1];
+        }
+        ListStoredBooksLastIndex--;
     }
-    ListStoredBooksLastIndex--;
     
     return 1;
 }

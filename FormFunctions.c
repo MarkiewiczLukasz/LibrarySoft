@@ -437,7 +437,7 @@ void HandleActionDelete(HWND hwnd, int sourceSelected) {
                                    "Usuń pozycję",
                                    MB_ICONWARNING | MB_YESNO);
         if (msgResult == IDYES) {
-            ListStoredBooks_Delete(idOfBook);
+            ListStoredBooks_Delete(idOfBook, true);
             ListStoredBooks_Save();
             FillList(mainHWND, sourceSelected);
         }

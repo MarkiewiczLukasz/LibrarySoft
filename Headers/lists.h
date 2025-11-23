@@ -1,6 +1,7 @@
 #ifndef LISTS_H
 #define LISTS_H
 #include "objects.h"
+#include <stdbool.h>
 #define MAX_BOOKS 500
 
 extern int ListStoredBooksLastIndex;
@@ -22,7 +23,7 @@ int ListBorrowedBooks_Add(BorrowedBook *borrowedBook);
 int ListLibraryUsers_Add(LibraryUser *user);
 
 // Delete item from the list
-int ListStoredBooks_Delete(int id);
+int ListStoredBooks_Delete(int id, bool deleteAll);
 int ListBorrowedBooks_Delete(int id);
 int ListLibraryUsers_Delete(int id);
 

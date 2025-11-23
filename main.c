@@ -66,7 +66,7 @@ BOOL CALLBACK BorrowBookWindow(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lP
             ListBorrowedBooks_Add(&borrowed);
 
             ListBorrowedBooks_Save();
-            ListStoredBooks_Delete(borrowingBookId);
+            ListStoredBooks_Delete(borrowingBookId,false);
             ListStoredBooks_Save();
             FillList(mainHWND, sourceSelected);
             EndDialog(hwndBorrowBook, 0);
