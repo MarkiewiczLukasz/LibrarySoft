@@ -227,7 +227,7 @@ BOOL CALLBACK addLibraryUserWindow(HWND hwnd, UINT Message, WPARAM wParam, LPARA
 BOOL CALLBACK BorrowBookWindow(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam);
 
 // === Akcja 1: Dodaj nowy rekord ===
-void HandleAction1(HWND hwnd, int sourceSelected) {
+void HandleActionAdd(HWND hwnd, int sourceSelected) {
     switch (sourceSelected) {
     case 0: // Zasoby: dodaj książkę magazynową
         if (hwndNewBook == NULL) {
@@ -263,7 +263,7 @@ void HandleAction1(HWND hwnd, int sourceSelected) {
 }
 
 // === Akcja 2: Edytuj rekord ===
-void HandleAction2(HWND hwnd, int sourceSelected) {
+void HandleActionEdit(HWND hwnd, int sourceSelected) {
     switch (sourceSelected) {
     case 0: // Zasoby: edytuj książkę magazynową
         if (hwndNewBook == NULL) {
@@ -343,7 +343,7 @@ void HandleAction2(HWND hwnd, int sourceSelected) {
 }
 
 // === Akcja 3: Zwróć książkę ===
-void HandleAction3(HWND hwnd, int sourceSelected) {
+void HandleActionReturn(HWND hwnd, int sourceSelected) {
     if (sourceSelected == 1) { // Wypożyczone: zwróć książkę do zasobów
         HWND list = GetDlgItem(hwnd, IDC_MainList1);
         int indexSelected = (int)SendMessage(list, LB_GETCURSEL, 0, 0);
@@ -376,7 +376,7 @@ void HandleAction3(HWND hwnd, int sourceSelected) {
 }
 
 // === Akcja 4: Wypożycz książkę ===
-void HandleAction4(HWND hwnd, int sourceSelected) {
+void HandleActionBorrow(HWND hwnd, int sourceSelected) {
     if (sourceSelected == 0 && hwndBorrowBook == NULL) { // Zasoby: otwórz dialog wypożyczenia
         HWND list = GetDlgItem(hwnd, IDC_MainList1);
         int indexSelected = (int)SendMessage(list, LB_GETCURSEL, 0, 0);
@@ -409,7 +409,7 @@ void HandleAction4(HWND hwnd, int sourceSelected) {
 }
 
 // === Akcja 6: Usuń rekord ===
-void HandleAction6(HWND hwnd, int sourceSelected) {
+void HandleActionDelete(HWND hwnd, int sourceSelected) {
     switch (sourceSelected) {
     case 0: // Zasoby: usuń książkę
     {

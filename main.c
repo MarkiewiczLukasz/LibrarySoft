@@ -293,37 +293,32 @@ BOOL CALLBACK mainWindow(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
                     }
                 }
             }
-            // brak "break" – dalej obsługa przycisków akcji (fallthrough kontrolowany)
         }
-        // === Akcja 1 ===
+
         case IDC_ACTION_ADD:
             if (HIWORD(wParam) == BN_CLICKED)
-                HandleAction1(hwnd, sourceSelected);
+                HandleActionAdd(hwnd, sourceSelected);
             break;
 
-        // === Akcja 2 ===
         case IDC_ACTION_EDIT:
             if (HIWORD(wParam) == BN_CLICKED)
-                HandleAction2(hwnd, sourceSelected);
+                HandleActionEdit(hwnd, sourceSelected);
             break;
 
-        // === Akcja 3 ===
         case IDC_ACTION_RETURN:
             if (HIWORD(wParam) == BN_CLICKED)
-                HandleAction3(hwnd, sourceSelected);
+                HandleActionReturn(hwnd, sourceSelected);
             break;
 
-        // === Akcja 4 ===
         case IDC_ACTION_BORROW:
             if (HIWORD(wParam) == BN_CLICKED)
-                HandleAction4(hwnd, sourceSelected);
+                HandleActionBorrow(hwnd, sourceSelected);
             break;
 
 
-        // === Akcja 6 ===
         case IDC_ACTION_DELETE:
             if (HIWORD(wParam) == BN_CLICKED)
-                HandleAction6(hwnd, sourceSelected);
+                HandleActionDelete(hwnd, sourceSelected);
             break;
         }
         break; // WM_COMMAND
